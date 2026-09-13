@@ -2,120 +2,91 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>블랙잭 연습 프로그램 MVP</title>
     <style>
-        /* 기본 리셋 및 꽉 찬 배경 */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+        body {
+            /* 더 깊고 어두운 카지노 펠트 느낌의 배경색 */
             background-color: #0a2a12;
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* 스크롤 방지 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* [핵심] 모바일/세로 화면에서 무조건 가로로 강제 회전시키는 박스 */
-        .landscape-wrapper {
-            width: 100vh;
-            height: 100vw;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 10px;
-            box-sizing: border-box;
         }
-
-        /* PC 화면이나 이미 가로인 경우 회전 취소 (반응형 대응) */
-        @media (min-aspect-ratio: 16/9) {
-            .landscape-wrapper {
-                width: 100vw;
-                height: 100vh;
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-        }
-
         h1 {
-            font-size: 22px;
-            margin: 0 0 10px 0;
+            margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-
         .table {
+            /* 테이블 모양을 타원형으로 (스크린샷처럼) */
             background-color: #1a5325;
-            width: 90vw;
-            max-width: 850px;
-            height: 70vh;
-            max-height: 480px;
-            border-radius: 50% / 15%;
-            padding: 20px;
-            box-shadow: inset 0 0 80px rgba(0,0,0,0.7);
-            border: 12px solid #3e2723;
+            width: 800px;
+            height: 500px;
+            margin: 20px auto;
+            border-radius: 50% / 10%; /* 타원형 테두리 */
+            padding: 40px;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.7);
+            border: 15px solid #3e2723; /* 나무 테두리 느낌 */
+            position: relative;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-sizing: border-box;
         }
-
         .section {
-            margin: 5px 0;
+            margin: 10px 0;
         }
-
         .section h3 {
-            margin: 0 0 5px 0;
+            margin: 0 0 10px 0;
             font-size: 16px;
-            opacity: 0.9;
+            opacity: 0.8;
             letter-spacing: 2px;
         }
-
         .cards {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            min-height: 110px;
+            gap: 15px; /* 카드 사이 간격 */
+            min-height: 110px; /* 카드 영역 높이 확보 */
+            perspective: 1000px; /* 카드 뒤집기 효과를 위한 원근감 */
         }
-
-        /* 큼직하게 키운 카드 스타일 */
         .card {
+            /* 카드 스타일을 실제처럼 */
             background: white;
             color: black;
-            width: 75px;
-            height: 110px;
+            width: 70px;
+            height: 105px;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             padding: 6px;
             font-weight: bold;
-            font-size: 22px;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-            box-sizing: border-box;
+            font-size: 20px;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.4);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
         }
-
+        /* 카드 뒷면 (스크린샷의 덮인 카드) */
         .card.hidden {
-            background-color: #b71c1c;
+            background-color: #b71c1c; /* 붉은색 뒷면 */
             background-image: repeating-linear-gradient(
                 45deg,
-                #c62828 0px, #c62828 10px,
-                #d32f2f 10px, #d32f2f 20px
-            );
+                #c62828 0px,
+                #c62828 10px,
+                #d32f2f 10px,
+                #d32f2f 20px
+            ); /* 간단한 패턴 */
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
             border: 2px solid #8e0000;
         }
-
         .card.red {
-            color: #d32f2f;
+            color: #d32f2f; /* 하트, 다이아몬드 빨간색 */
         }
-
         .card-corner {
             line-height: 1;
             display: flex;
@@ -123,83 +94,87 @@
         }
         .card-corner.top { align-self: flex-start; }
         .card-corner.bottom { align-self: flex-end; transform: rotate(180deg); }
-        .card-suit { font-size: 28px; align-self: center; }
+        .card-suit { font-size: 30px; align-self: center; margin: 5px 0;}
 
         .controls {
-            margin-top: 10px;
+            /* 버튼 영역 */
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 50px;
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
         }
-
         .controls button {
             border: none;
-            padding: 12px 22px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 18px;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 5px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.2s;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
-
         .controls button:hover:not(:disabled) {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-
         .controls button:disabled {
             background-color: #455a64 !important;
             color: #90a4ae !important;
             cursor: not-allowed;
             box-shadow: none;
         }
-
+        
         #btn-deal { background-color: #eceff1; color: #37474f; }
-        #btn-hit { background-color: #4caf50; color: white; }
-        #btn-stand { background-color: #ff9800; color: white; }
-        #btn-double { background-color: #2196f3; color: white; }
-        #btn-split { background-color: #9c27b0; color: white; }
+        #btn-hit { background-color: #4caf50; color: white; border: 2px solid #388e3c;}
+        #btn-stand { background-color: #ff9800; color: white; border: 2px solid #f57c00;}
+        #btn-double { background-color: #2196f3; color: white; border: 2px solid #1976d2;}
+        #btn-split { background-color: #9c27b0; color: white; border: 2px solid #7b1fa2;}
         
         .info-box {
-            font-size: 17px;
-            margin: 3px 0;
-            font-weight: bold;
-        }
-
-        #message {
-            font-size: 20px;
-            color: #ffeb3b;
-            height: 30px;
+            font-size: 16px;
             margin: 5px 0;
             font-weight: bold;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            opacity: 0.9;
+        }
+        #message {
+            font-size: 24px;
+            color: #ffeb3b;
+            height: 40px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            min-height: 40px;
         }
     </style>
 </head>
 <body>
 
-    <div class="landscape-wrapper">
-        <h1>♠️ 블랙잭 연습 프로그램 ♥️</h1>
-        
-        <div class="table">
-            <!-- 딜러 영역 -->
-            <div class="section">
-                <h3>DEALER</h3>
-                <div id="dealer-cards" class="cards"></div>
-                <div class="info-box">합계: <span id="dealer-score">?</span></div>
-            </div>
-
-            <div id="message">게임을 시작하려면 버튼을 누르세요</div>
-
-            <!-- 플레이어 영역 -->
-            <div class="section">
-                <h3>PLAYER</h3>
-                <div id="player-cards" class="cards"></div>
-                <div class="info-box">합계: <span id="player-score">0</span></div>
-            </div>
+    <h1>♠️ 블랙잭 연습 프로그램 (MVP) ♥️</h1>
+    
+    <div class="table">
+        <!-- 딜러 영역 -->
+        <div class="section">
+            <h3>딜러</h3>
+            <div id="dealer-cards" class="cards"></div>
+            <div class="info-box">합계: <span id="dealer-score">?</span></div>
         </div>
 
-        <!-- 하단 액션 버튼 -->
+        <hr style="border: 0.5px solid #2e7d32; width: 80%;">
+
+        <!-- 플레이어 영역 -->
+        <div class="section">
+            <h3>플레이어</h3>
+            <div id="player-cards" class="cards"></div>
+            <div class="info-box">합계: <span id="player-score">0</span></div>
+        </div>
+
+        <div id="message">게임을 시작하려면 버튼을 누르세요</div>
+
+        <!-- 하단 액션 버튼 (스크린샷 참고) -->
         <div class="controls">
             <button id="btn-deal" onclick="startGame()">게임 시작</button>
             <button id="btn-hit" onclick="hit()" disabled>히트</button>
@@ -224,6 +199,7 @@
                 deck.push({ suit, val });
             }
         }
+        // 덱 섞기
         deck.sort(() => Math.random() - 0.5);
     }
 
@@ -252,6 +228,7 @@
     }
 
     function render(showDealerSecond = false) {
+        // 플레이어 카드 렌더링
         const playerContainer = document.getElementById('player-cards');
         playerContainer.innerHTML = '';
         playerHand.forEach(card => {
@@ -259,12 +236,15 @@
         });
         document.getElementById('player-score').innerText = calculateScore(playerHand);
 
+        // 딜러 카드 렌더링
         const dealerContainer = document.getElementById('dealer-cards');
         dealerContainer.innerHTML = '';
         dealerHand.forEach((card, index) => {
             if (index === 1 && !showDealerSecond) {
+                // 뒷면 카드 표현
                 const hiddenEl = document.createElement('div');
-                hiddenEl.className = 'card hidden';
+                hiddenEl.className = 'card';
+                hiddenEl.style.backgroundColor = '#b71c1c';
                 dealerContainer.appendChild(hiddenEl);
             } else {
                 dealerContainer.appendChild(createCardElement(card));
@@ -284,15 +264,7 @@
         if (['♥', '♦'].includes(card.suit)) {
             el.classList.add('red');
         }
-        el.innerHTML = `
-            <div class="card-corner top">
-                <span>${card.val}</span>
-            </div>
-            <span class="card-suit">${card.suit}</span>
-            <div class="card-corner bottom">
-                <span>${card.val}</span>
-            </div>
-        `;
+        el.innerHTML = `<span>${card.val}</span><span style="font-size:24px; align-self:center;">${card.suit}</span><span style="align-self:flex-end;">${card.val}</span>`;
         return el;
     }
 
@@ -305,12 +277,15 @@
 
         render(false);
 
+        // 버튼 활성화 조절
         document.getElementById('btn-deal').innerText = '다시 시작';
         document.getElementById('btn-hit').disabled = false;
         document.getElementById('btn-stand').disabled = false;
         document.getElementById('btn-double').disabled = playerHand.length !== 2;
+        // 첫 두 장의 카드가 같은 숫자/그림일 때만 스플릿 활성화 (간단 구현)
         document.getElementById('btn-split').disabled = playerHand[0].val !== playerHand[1].val;
 
+        // 시작하자마자 블랙잭인 경우 체크
         if (calculateScore(playerHand) === 21) {
             document.getElementById('message').innerText = '블랙잭! 플레이어 승리!';
             endGame();
@@ -322,6 +297,7 @@
         playerHand.push(deck.pop());
         render(false);
         
+        // 더 이상 스플릿이나 더블다운은 불가
         document.getElementById('btn-double').disabled = true;
         document.getElementById('btn-split').disabled = true;
 
@@ -349,13 +325,15 @@
     }
 
     function splitCards() {
-        alert("MVP 버전의 스플릿 기능입니다.");
+        // MVP 단계에서는 스플릿 시 첫 번째 카드 기준으로 간단히 안내만 추가
+        alert("MVP 버전의 스플릿 기능입니다. (추후 두 개의 패로 확장 가능)");
     }
 
     function dealerTurn() {
-        render(true);
+        render(true); // 딜러 두 번째 카드 공개
         let dealerScore = calculateScore(dealerHand);
 
+        // 딜러는 16 이하이면 무조건 히트, 17 이상이면 스탠드 (Soft 17룰 간소화)
         let timer = setInterval(() => {
             if (dealerScore < 17) {
                 dealerHand.push(deck.pop());
