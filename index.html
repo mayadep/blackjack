@@ -19,7 +19,6 @@
             align-items: center;
         }
 
-        /* 가로 모드 강제 회전 및 꽉 찬 화면 */
         .landscape-wrapper {
             width: 100vh;
             height: 100vw;
@@ -77,27 +76,38 @@
             letter-spacing: 2px;
         }
 
+        /* [핵심] 카드가 겹쳐지도록 설정하는 영역 */
         .cards {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            min-height: 105px;
+            align-items: center;
+            min-height: 125px; /* 카드 크기에 맞춰 여유 확보 */
+            position: relative;
+            padding-left: 30px; /* 카드가 겹쳐질 때 시작 위치 보정 */
         }
 
+        /* [핵심] 카드 크기를 더 키우고, 겹쳐 쌓이기(Margin-left 음수 활용) 적용 */
         .card {
             background: white;
             color: black;
-            width: 72px;
-            height: 105px;
-            border-radius: 8px;
+            width: 85px;  /* 기존보다 큼직하게 확대 */
+            height: 120px; /* 기존보다 큼직하게 확대 */
+            border-radius: 9px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 6px;
+            padding: 8px;
             font-weight: bold;
-            font-size: 22px;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+            font-size: 26px; /* 글자 크기도 대폭 확대 */
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.6);
             box-sizing: border-box;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        /* 첫 번째 카드를 제외한 나머지 카드들은 왼쪽으로 바짝 당겨서 겹치게 만듦 */
+        .card:not(:first-child) {
+            margin-left: -50px; /* 4/5 정도 겹치도록 음수 마진 적용 */
         }
 
         .card.hidden {
@@ -121,9 +131,8 @@
         }
         .card-corner.top { align-self: flex-start; }
         .card-corner.bottom { align-self: flex-end; transform: rotate(180deg); }
-        .card-suit { font-size: 26px; align-self: center; }
+        .card-suit { font-size: 32px; align-self: center; }
 
-        /* [가독성 대폭 강화] 하단 버튼 스타일 */
         .controls {
             width: 100%;
             max-width: 880px;
@@ -135,18 +144,17 @@
         }
 
         .controls button {
-            flex: 1; /* 버튼들이 공간을 균등하게 채우도록 설정 */
+            flex: 1;
             border: none;
             padding: 16px 5px;
-            font-size: 18px; /* 글자 크기 대폭 확대 */
-            font-weight: 900; /* 가장 두꺼운 굵기 적용 */
+            font-size: 18px;
+            font-weight: 900;
             border-radius: 10px;
             cursor: pointer;
             box-shadow: 0 6px 12px rgba(0,0,0,0.4);
             text-transform: uppercase;
             letter-spacing: 1px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            transition: transform 0.1s;
         }
 
         .controls button:active:not(:disabled) {
@@ -162,7 +170,6 @@
             opacity: 0.6;
         }
 
-        /* 각 버튼별 개성 있고 선명한 고대비 컬러 */
         #btn-deal { background-color: #cfd8dc; color: #111; border-bottom: 4px solid #90a4ae; }
         #btn-hit { background-color: #2e7d32; color: #ffffff; border-bottom: 4px solid #1b5e20; }
         #btn-stand { background-color: #e65100; color: #ffffff; border-bottom: 4px solid #bf360c; }
@@ -208,7 +215,7 @@
             </div>
         </div>
 
-        <!-- 하단 액션 버튼 (가독성 최적화) -->
+        <!-- 하단 액션 버튼 -->
         <div class="controls">
             <button id="btn-deal" onclick="startGame()">게임시작</button>
             <button id="btn-hit" onclick="hit()" disabled>히트</button>
@@ -263,21 +270,26 @@
     function render(showDealerSecond = false) {
         const playerContainer = document.getElementById('player-cards');
         playerContainer.innerHTML = '';
-        playerHand.forEach(card => {
-            playerContainer.appendChild(createCardElement(card));
+        playerHand.forEach((card, index) => {
+            const cardEl = createCardElement(card);
+            // 겹쳐질 때 나중에 나온 카드가 위로 오도록 z-index 부여
+            cardEl.style.zIndex = index;
+            playerContainer.appendChild(cardEl);
         });
         document.getElementById('player-score').innerText = calculateScore(playerHand);
 
         const dealerContainer = document.getElementById('dealer-cards');
         dealerContainer.innerHTML = '';
         dealerHand.forEach((card, index) => {
+            let cardEl;
             if (index === 1 && !showDealerSecond) {
-                const hiddenEl = document.createElement('div');
-                hiddenEl.className = 'card hidden';
-                dealerContainer.appendChild(hiddenEl);
+                cardEl = document.createElement('div');
+                cardEl.className = 'card hidden';
             } else {
-                dealerContainer.appendChild(createCardElement(card));
+                cardEl = createCardElement(card);
             }
+            cardEl.style.zIndex = index;
+            dealerContainer.appendChild(cardEl);
         });
 
         if (showDealerSecond) {
@@ -384,7 +396,7 @@
 
         if (dealerScore > 21) {
             msg = '딜러 버스트! 플레이어 승리!';
-        } else if (playerScore > dealerScore) {
+        } else if (playerScore > playerScore) {
             msg = '플레이어 승리!';
         } else if (playerScore < dealerScore) {
             msg = '딜러 승리!';
