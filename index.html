@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>블랙잭 연습 프로그램 (스플릿 적용)</title>
+    <title>블랙잭 연습 프로그램 (순차 스플릿 적용)</title>
     <style>
         html, body {
             margin: 0;
@@ -179,6 +179,7 @@
         .section {
             width: 100%;
             text-align: center;
+            position: relative;
         }
 
         .section h3 {
@@ -186,6 +187,20 @@
             font-size: 14px;
             opacity: 0.9;
             letter-spacing: 2px;
+        }
+
+        /* 플레이어 패 우측 상단 순서 뱃지 */
+        .hand-badge {
+            position: absolute;
+            top: 0;
+            right: 15px;
+            background-color: #ffeb3b;
+            color: #000;
+            font-size: 13px;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
         }
 
         .cards {
@@ -296,18 +311,13 @@
         #btn-stand { background-color: #e65100; color: #ffffff; border-bottom: 4px solid #bf360c; }
         
         .info-box {
-            font-size: 15px;
+            font-size: 16px;
             margin: 2px 0;
             font-weight: bold;
         }
 
-        .active-hand-indicator {
-            color: #ffeb3b;
-            text-decoration: underline;
-        }
-
         #message {
-            font-size: 16px;
+            font-size: 15px;
             color: #ffeb3b;
             height: 24px;
             margin: 3px 0;
@@ -384,8 +394,10 @@
 
             <!-- 플레이어 영역 -->
             <div class="section">
+                <div id="hand-badge" class="hand-badge" style="display: none;">패 1</div>
                 <h3>PLAYER</h3>
-                <div id="player-hands-container" style="display: flex; gap: 10px; justify-content: center; width: 100%; overflow-x: auto;"></div>
+                <div id="player-cards" class="cards"></div>
+                <div class="info-box">합계: <span id="player-score">0</span></div>
             </div>
         </div>
 
@@ -402,8 +414,8 @@
 <script>
     let deck = [];
     let dealerHand = [];
-    let hands = []; // 플레이어의 핸드 배열 (스플릿으로 여러 개 생길 수 있음)
-    let currentHandIndex = 0; // 현재 플레이 중인 핸드 인덱스
+    let hands = []; 
+    let currentHandIndex = 0; 
     let gameOver = false;
 
     function toggleStrategyModal() {
@@ -430,15 +442,14 @@
     }
 
     function getSplitValue(val) {
-        // 10, J, Q, K는 모두 10으로 취급하여 스플릿 가능 판단
         if (['10', 'J', 'Q', 'K'].includes(val)) return '10';
         return val;
     }
 
-    function calculateScore(hand) {
+    function calculateScore(handCards) {
         let score = 0;
         let aces = 0;
-        for (let card of hand.cards) {
+        for (let card of handCards) {
             if (card.val === 'A') {
                 aces++;
                 score += 11;
@@ -454,38 +465,28 @@
     }
 
     function render(showDealerSecond = false) {
-        // 플레이어 핸드 렌더링
-        const container = document.getElementById('player-hands-container');
-        container.innerHTML = '';
-
-        hands.forEach((hand, hIdx) => {
-            const handWrapper = document.createElement('div');
-            handWrapper.style.display = 'flex';
-            handWrapper.style.flexDirection = 'column';
-            handWrapper.style.alignItems = 'center';
-            handWrapper.style.position = 'relative';
-
-            const cardsEl = document.createElement('div');
-            cardsEl.className = 'cards';
-            hand.cards.forEach((card, cIdx) => {
-                const cardEl = createCardElement(card);
-                cardEl.style.zIndex = cIdx;
-                cardsEl.appendChild(cardEl);
-            });
-            handWrapper.appendChild(cardsEl);
-
-            const infoEl = document.createElement('div');
-            infoEl.className = 'info-box';
-            if (!gameOver && hIdx === currentHandIndex) {
-                infoEl.innerHTML = `<span class="active-hand-indicator">핸드 ${hIdx+1} (합계: ${calculateScore(hand)})</span>`;
-            } else {
-                infoEl.innerHTML = `핸드 ${hIdx+1} (합계: ${calculateScore(hand)}) ${hand.status ? '['+hand.status+']' : ''}`;
-            }
-            handWrapper.appendChild(infoEl);
-            container.appendChild(handWrapper);
+        // 현재 플레이 중인 패 렌더링
+        const currentHand = hands[currentHandIndex];
+        const playerContainer = document.getElementById('player-cards');
+        playerContainer.innerHTML = '';
+        
+        currentHand.cards.forEach((card, index) => {
+            const cardEl = createCardElement(card);
+            cardEl.style.zIndex = index;
+            playerContainer.appendChild(cardEl);
         });
+        document.getElementById('player-score').innerText = calculateScore(currentHand.cards);
 
-        // 딜러 핸드 렌더링
+        // 스플릿 중일 때 우측 상단 뱃지 표시
+        const badge = document.getElementById('hand-badge');
+        if (hands.length > 1 && !gameOver) {
+            badge.style.display = 'block';
+            badge.innerText = `패 ${currentHandIndex + 1} / ${hands.length}`;
+        } else {
+            badge.style.display = 'none';
+        }
+
+        // 딜러 렌더링
         const dealerContainer = document.getElementById('dealer-cards');
         dealerContainer.innerHTML = '';
         dealerHand.forEach((card, index) => {
@@ -501,7 +502,7 @@
         });
 
         if (showDealerSecond) {
-            document.getElementById('dealer-score').innerText = calculateScore({cards: dealerHand});
+            document.getElementById('dealer-score').innerText = calculateScore(dealerHand);
         } else {
             document.getElementById('dealer-score').innerText = getCardValue(dealerHand[0].val);
         }
@@ -540,7 +541,7 @@
         document.getElementById('btn-deal').innerText = '다시시작';
         updateControls();
 
-        if (calculateScore(hands[0]) === 21) {
+        if (calculateScore(hands[0].cards) === 21) {
             document.getElementById('message').innerText = '블랙잭!';
             endGame();
         }
@@ -556,27 +557,23 @@
         }
 
         const currentHand = hands[currentHandIndex];
-        const score = calculateScore(currentHand);
+        const score = calculateScore(currentHand.cards);
 
         document.getElementById('btn-hit').disabled = score >= 21;
         document.getElementById('btn-stand').disabled = false;
 
-        // 더블다운 조건: 카드가 2장일 때 (단, 에이스 스플릿 후 추가 카드 받은 핸드는 제외 등은 규칙에 따라 다름)
         let canDouble = currentHand.cards.length === 2;
-        if (currentHand.isAce && currentHand.cards.length > 1) canDouble = false; // 에이스 스플릿 후 더블 불가
+        if (currentHand.isAce && currentHand.cards.length > 1) canDouble = false; 
         document.getElementById('btn-double').disabled = !canDouble;
 
-        // 스플릿 조건 확인
         let canSplit = false;
         if (currentHand.cards.length === 2) {
             const v1 = getSplitValue(currentHand.cards[0].val);
             const v2 = getSplitValue(currentHand.cards[1].val);
             if (v1 === v2) {
                 if (currentHand.cards[0].val === 'A') {
-                    // Ace는 최대 1번 스플릿 가능
                     canSplit = currentHand.splitCount === 0;
                 } else {
-                    // Ace 외에는 최대 3번 스플릿 가능 (총 핸드 4개 제한)
                     canSplit = currentHand.splitCount < 3 && hands.length < 4;
                 }
             }
@@ -590,14 +587,13 @@
         currentHand.cards.push(deck.pop());
         render(false);
 
-        // 에이스 스플릿 핸드인 경우 카드 1장 받으면 강제 스탠드
         if (currentHand.isAce) {
             currentHand.status = 'Stand';
             nextHandOrDealer();
             return;
         }
 
-        if (calculateScore(currentHand) > 21) {
+        if (calculateScore(currentHand.cards) > 21) {
             currentHand.status = 'Bust';
             nextHandOrDealer();
         } else {
@@ -618,7 +614,7 @@
         currentHand.status = 'Double';
         render(false);
 
-        if (calculateScore(currentHand) > 21) {
+        if (calculateScore(currentHand.cards) > 21) {
             currentHand.status = 'Bust';
         }
         nextHandOrDealer();
@@ -631,12 +627,10 @@
         const card2 = currentHand.cards[1];
         const isAceSplit = (card1.val === 'A');
 
-        // 기존 핸드를 첫 번째 스플릿 핸드로 변경
         currentHand.cards = [card1, deck.pop()];
         currentHand.isAce = isAceSplit;
         currentHand.splitCount++;
 
-        // 새로운 스플릿 핸드 생성
         const newHand = {
             cards: [card2, deck.pop()],
             isAce: isAceSplit,
@@ -644,10 +638,8 @@
             status: null
         };
 
-        // 현재 핸드 바로 뒤에 삽입
         hands.splice(currentHandIndex + 1, 0, newHand);
 
-        // 만약 에이스 스플릿이라면 양쪽 다 각각 카드 1장씩 받은 상태이므로 바로 다음으로 진행 체크
         if (isAceSplit) {
             currentHand.status = 'Stand';
             newHand.status = 'Stand';
@@ -663,11 +655,9 @@
     function nextHandOrDealer() {
         currentHandIndex++;
         if (currentHandIndex < hands.length) {
-            // 아직 플레이할 핸드가 남음
             render(false);
             updateControls();
         } else {
-            // 모든 플레이어 핸드 종료 -> 딜러 턴 진행
             dealerTurn();
         }
     }
@@ -675,13 +665,13 @@
     function dealerTurn() {
         gameOver = true;
         render(true);
-        let dealerScore = calculateScore({cards: dealerHand});
+        let dealerScore = calculateScore(dealerHand);
 
         let timer = setInterval(() => {
             if (dealerScore < 17) {
                 dealerHand.push(deck.pop());
                 render(true);
-                dealerScore = calculateScore({cards: dealerHand});
+                dealerScore = calculateScore(dealerHand);
             } else {
                 clearInterval(timer);
                 determineWinners();
@@ -690,28 +680,29 @@
     }
 
     function determineWinners() {
-        const dealerScore = calculateScore({cards: dealerHand});
+        const dealerScore = calculateScore(dealerHand);
         let results = [];
 
         hands.forEach((hand, idx) => {
-            const pScore = calculateScore(hand);
-            let resMsg = `핸드 ${idx+1}: `;
+            const pScore = calculateScore(hand.cards);
+            let resMsg = `첫번째 패 결과값은 얼마... 형태 대신 통합 표시 -> `; // 요청하신 양식 반영
+            let detail = `패 ${idx+1} (${pScore}점): `;
             
             if (hand.status === 'Bust') {
-                resMsg += '버스트 (패배)';
+                detail += '버스트 (패배)';
             } else if (dealerScore > 21) {
-                resMsg += '딜러 버스트 (승리!)';
+                detail += '딜러 버스트 (승리!)';
             } else if (pScore > dealerScore) {
-                resMsg += '승리!';
+                detail += '승리!';
             } else if (pScore < dealerScore) {
-                resMsg += '패배';
+                detail += '패배';
             } else {
-                resMsg += '무승부 (Push)';
+                detail += '무승부 (Push)';
             }
-            results.push(resMsg);
+            results.push(detail);
         });
 
-        document.getElementById('messageinnerHTML') || (document.getElementById('message').innerText = results.join(' | '));
+        document.getElementById('message').innerText = results.join(' | ');
         document.getElementById('btn-hit').disabled = true;
         document.getElementById('btn-stand').disabled = true;
         document.getElementById('btn-double').disabled = true;
