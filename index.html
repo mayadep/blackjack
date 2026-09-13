@@ -105,7 +105,7 @@
             color: #ffeb3b;
         }
 
-        /* 모달 내 스크롤 영역 (전체 표가 길기 때문에 스크롤 제공) */
+        /* 모달 내 스크롤 영역 */
         .modal-scroll-area {
             overflow-y: auto;
             flex: 1;
@@ -137,19 +137,17 @@
             z-index: 2;
         }
 
-        /* 섹션 구분 헤더 행 (HARD, SOFT, SPLITS) */
         .section-header {
             background-color: #1b5e20 !important;
             color: #ffeb3b !important;
             letter-spacing: 1px;
         }
 
-        /* 표 색상 가이드 (H: 초록, D: 노랑, S: 빨강, SP: 파랑, SU: 하양/검정) */
+        /* 표 색상 가이드 (H: 초록, D: 노랑, S: 빨강, SP: 파랑) */
         .cell-h { background-color: #2e7d32; color: white; }
         .cell-d { background-color: #fbc02d; color: black; }
         .cell-s { background-color: #c62828; color: white; }
         .cell-sp { background-color: #1565c0; color: white; }
-        .cell-su { background-color: #ffffff; color: black; }
 
         #btn-close-modal {
             background-color: #c62828;
@@ -193,7 +191,6 @@
             letter-spacing: 2px;
         }
 
-        /* 겹쳐지는 카드 영역 */
         .cards {
             display: flex;
             justify-content: center;
@@ -248,7 +245,6 @@
         .card-corner.bottom { align-self: flex-end; transform: rotate(180deg); }
         .card-suit { font-size: 32px; align-self: center; }
 
-        /* 하단 액션 버튼 배치 */
         .controls {
             width: 100%;
             max-width: 450px;
@@ -323,7 +319,7 @@
     <!-- [전략표 모달 팝업] -->
     <div id="strategy-modal">
         <div class="modal-content">
-            <h2>Basic Strategy Chart (DAS)</h2>
+            <h2>Basic Strategy Chart (No Surrender, DAS)</h2>
             <div class="modal-scroll-area">
                 <table class="strategy-table">
                     <tr>
@@ -359,11 +355,11 @@
                     </tr>
                     <tr>
                         <td><b>15</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-su">SU</td><td class="cell-h">H</td>
+                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
                     </tr>
                     <tr>
                         <td><b>16</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-su">SU</td><td class="cell-su">SU</td><td class="cell-su">SU</td>
+                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
                     </tr>
                     <tr>
                         <td><b>17+</b></td>
