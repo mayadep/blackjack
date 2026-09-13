@@ -19,96 +19,87 @@
             align-items: center;
         }
 
-        .landscape-wrapper {
-            width: 100vh;
-            height: 100vw;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
+        /* [세로 모드 고정 및 화면 맞춤] */
+        .portrait-container {
+            width: 100vw;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-evenly;
-            padding: 10px;
+            justify-content: space-between;
+            padding: 20px 10px;
             box-sizing: border-box;
-        }
-
-        @media (min-aspect-ratio: 16/9) {
-            .landscape-wrapper {
-                width: 100vw;
-                height: 100vh;
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
         }
 
         h1 {
             font-size: 22px;
-            margin: 0;
+            margin: 5px 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         .table {
             background-color: #1a5325;
-            width: 96vw;
-            max-width: 900px;
-            height: 66vh;
-            max-height: 450px;
-            border-radius: 50% / 15%;
-            padding: 15px 25px;
-            box-shadow: inset 0 0 90px rgba(0,0,0,0.7);
-            border: 12px solid #3e2723;
+            width: 100%;
+            max-width: 450px;
+            flex: 1;
+            max-height: 580px;
+            border-radius: 30px;
+            padding: 20px 10px;
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.7);
+            border: 10px solid #3e2723;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-around;
+            align-items: center;
             box-sizing: border-box;
+            margin: 10px 0;
         }
 
         .section {
-            margin: 0;
+            width: 100%;
+            text-align: center;
         }
 
         .section h3 {
-            margin: 0 0 3px 0;
-            font-size: 14px;
+            margin: 0 0 5px 0;
+            font-size: 15px;
             opacity: 0.9;
             letter-spacing: 2px;
         }
 
-        /* 겹쳐지는 카드 영역 공간 확보 */
+        /* 겹쳐지는 카드 영역 */
         .cards {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 140px; 
+            min-height: 130px;
             position: relative;
-            padding-left: 40px; 
+            padding-left: 30px;
         }
 
-        /* [카드 크기 극대화] 훨씬 크고 시원시원한 카드 디자인 */
+        /* [세로형에 최적화된 큼직한 카드 크기] */
         .card {
             background: white;
             color: black;
-            width: 95px;   /* 가로 폭 확대 */
-            height: 135px;  /* 세로 높이 확대 */
-            border-radius: 10px;
+            width: 85px;
+            height: 120px;
+            border-radius: 9px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 9px;
+            padding: 8px;
             font-weight: bold;
-            font-size: 30px; /* 글자 크기 대폭 확대 */
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+            font-size: 26px;
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.6);
             box-sizing: border-box;
             position: relative;
-            transition: transform 0.3s ease;
             flex-shrink: 0;
         }
 
-        /* 카드가 추가될 때 겹쳐지도록 음수 마진 적용 (너비의 약 60% 정도 겹침) */
+        /* 세로 화면에서도 히트 시 카드가 자연스럽게 겹쳐지도록 설정 */
         .card:not(:first-child) {
-            margin-left: -55px; 
+            margin-left: -50px;
         }
 
         .card.hidden {
@@ -132,30 +123,34 @@
         }
         .card-corner.top { align-self: flex-start; }
         .card-corner.bottom { align-self: flex-end; transform: rotate(180deg); }
-        .card-suit { font-size: 38px; align-self: center; }
+        .card-suit { font-size: 32px; align-self: center; }
 
+        /* [하단 액션 버튼 세로형 배치] 한 손 조작이 편하게 2단 혹은 큼직하게 구성 */
         .controls {
             width: 100%;
-            max-width: 900px;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 0 5px;
+            max-width: 450px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3개, 2개 배치로 한 눈에 들어오게 */
+            gap: 8px;
             box-sizing: border-box;
         }
 
         .controls button {
-            flex: 1;
             border: none;
-            padding: 15px 5px;
-            font-size: 18px;
+            padding: 14px 5px;
+            font-size: 16px;
             font-weight: 900;
             border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
             text-transform: uppercase;
             letter-spacing: 1px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* 게임시작 버튼은 전체 너비를 쓰도록 설정 */
+        #btn-deal {
+            grid-column: span 3;
         }
 
         .controls button:active:not(:disabled) {
@@ -179,15 +174,15 @@
         
         .info-box {
             font-size: 16px;
-            margin: 1px 0;
+            margin: 3px 0;
             font-weight: bold;
         }
 
         #message {
-            font-size: 22px;
+            font-size: 19px;
             color: #ffeb3b;
-            height: 28px;
-            margin: 2px 0;
+            height: 25px;
+            margin: 5px 0;
             font-weight: 900;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
@@ -195,7 +190,7 @@
 </head>
 <body>
 
-    <div class="landscape-wrapper">
+    <div class="portrait-container">
         <h1>♠️ 블랙잭 연습 프로그램 ♥️</h1>
         
         <div class="table">
@@ -206,7 +201,7 @@
                 <div class="info-box">합계: <span id="dealer-score">?</span></div>
             </div>
 
-            <div id="message">게임을 시작하려면 버튼을 누르세요</div>
+            <div id="message">게임을 시작하려면 누르세요</div>
 
             <!-- 플레이어 영역 -->
             <div class="section">
@@ -216,7 +211,7 @@
             </div>
         </div>
 
-        <!-- 하단 액션 버튼 -->
+        <!-- 하단 액션 버튼 (세로 모드 그랜드 그리드 배치) -->
         <div class="controls">
             <button id="btn-deal" onclick="startGame()">게임시작</button>
             <button id="btn-hit" onclick="hit()" disabled>히트</button>
