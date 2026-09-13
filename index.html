@@ -122,7 +122,11 @@
         .card-corner.bottom { align-self: flex-end; transform: rotate(180deg); }
         .card-suit { font-size: 32px; align-self: center; }
 
-        /* [핵심 그리드 배치] 3열 구조로 스탠드를 히트 바로 아래(3번째 열)에 위치시킴 */
+        /* [올바른 그리드 배치]
+           1행: 게임시작 (3칸 전체)
+           2행: [스플릿(1열)] [더블다운(2열)] [히트(3열)]
+           3행: [빈칸(1열)] [빈칸(2열)] [스탠드(3열 - 히트 바로 아래)]
+        */
         .controls {
             width: 100%;
             max-width: 450px;
@@ -146,22 +150,20 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
-        /* 1행: 게임시작 (전체 너비 3칸 차지) */
         #btn-deal {
             grid-column: span 3;
             padding: 15px 5px;
             font-size: 16px;
         }
 
-        /* 2행: 스플릿(1열), 더블다운(2열), 히트(3열) */
-        #btn-split { grid-column: 1; }
-        #btn-double { grid-column: 2; }
-        #btn-hit { grid-column: 3; }
-
-        /* 3행: 스탠드를 히트 바로 아래인 3열에 배치 (크기도 히트와 똑같이 1칸 크기) */
-        #btn-stand {
-            grid-column: 3;
-            grid-row: 3;
+        #btn-split { grid-column: 1; grid-row: 2; }
+        #btn-double { grid-column: 2; grid-row: 2; }
+        #btn-hit { grid-column: 3; grid-row: 2; }
+        
+        /* 스탠드를 정확히 히트 버튼 아래(3열)에 배치 */
+        #btn-stand { 
+            grid-column: 3; 
+            grid-row: 3; 
         }
 
         .controls button:active:not(:disabled) {
@@ -222,7 +224,7 @@
             </div>
         </div>
 
-        <!-- 하단 액션 버튼 (히트 바로 아래 스탠드 배치) -->
+        <!-- 하단 액션 버튼 -->
         <div class="controls">
             <button id="btn-deal" onclick="startGame()">게임시작</button>
             <button id="btn-split" onclick="splitCards()" disabled>스플릿</button>
