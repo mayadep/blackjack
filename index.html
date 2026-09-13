@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>블랙잭 연습 프로그램 MVP</title>
+    <title>블랙잭 연습 프로그램 (스플릿 적용)</title>
     <style>
         html, body {
             margin: 0;
@@ -105,7 +105,6 @@
             color: #ffeb3b;
         }
 
-        /* 모달 내 스크롤 영역 */
         .modal-scroll-area {
             overflow-y: auto;
             flex: 1;
@@ -114,7 +113,6 @@
             border: 1px solid #2e7d32;
         }
 
-        /* 베이직 전략 표 스타일 */
         .strategy-table {
             width: 100%;
             border-collapse: collapse;
@@ -143,7 +141,6 @@
             letter-spacing: 1px;
         }
 
-        /* 표 색상 가이드 (H: 초록, D: 노랑, S: 빨강, SP: 파랑) */
         .cell-h { background-color: #2e7d32; color: white; }
         .cell-d { background-color: #fbc02d; color: black; }
         .cell-s { background-color: #c62828; color: white; }
@@ -299,18 +296,24 @@
         #btn-stand { background-color: #e65100; color: #ffffff; border-bottom: 4px solid #bf360c; }
         
         .info-box {
-            font-size: 16px;
+            font-size: 15px;
             margin: 2px 0;
             font-weight: bold;
         }
 
+        .active-hand-indicator {
+            color: #ffeb3b;
+            text-decoration: underline;
+        }
+
         #message {
-            font-size: 18px;
+            font-size: 16px;
             color: #ffeb3b;
             height: 24px;
             margin: 3px 0;
             font-weight: 900;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
         }
     </style>
 </head>
@@ -325,126 +328,36 @@
                     <tr>
                         <th>HARD</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>A</th>
                     </tr>
-                    <tr>
-                        <td><b>8</b></td>
-                        <td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>9</b></td>
-                        <td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>10</b></td>
-                        <td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>11</b></td>
-                        <td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td>
-                    </tr>
-                    <tr>
-                        <td><b>12</b></td>
-                        <td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>13</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>14</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>15</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>16</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>17+</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td>
-                    </tr>
-
-                    <tr>
-                        <th colspan="11" class="section-header">SOFT</th>
-                    </tr>
-                    <tr>
-                        <td><b>A,2</b></td>
-                        <td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>A,3</b></td>
-                        <td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>A,4</b></td>
-                        <td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>A,5</b></td>
-                        <td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>A,6</b></td>
-                        <td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>A,7</b></td>
-                        <td class="cell-s">S</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>A,8</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td>
-                    </tr>
-                    <tr>
-                        <td><b>A,9</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td>
-                    </tr>
-
-                    <tr>
-                        <th colspan="11" class="section-header">SPLITS</th>
-                    </tr>
-                    <tr>
-                        <td><b>2,2</b></td>
-                        <td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>3,3</b></td>
-                        <td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>4,4</b></td>
-                        <td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>5,5</b></td>
-                        <td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>6,6</b></td>
-                        <td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>7,7</b></td>
-                        <td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td>
-                    </tr>
-                    <tr>
-                        <td><b>8,8</b></td>
-                        <td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td>
-                    </tr>
-                    <tr>
-                        <td><b>9,9</b></td>
-                        <td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-s">S</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-s">S</td><td class="cell-s">S</td>
-                    </tr>
-                    <tr>
-                        <td><b>10,10</b></td>
-                        <td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td>
-                    </tr>
-                    <tr>
-                        <td><b>A,A</b></td>
-                        <td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td>
-                    </tr>
+                    <tr><td><b>8</b></td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>9</b></td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>10</b></td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>11</b></td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td></tr>
+                    <tr><td><b>12</b></td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>13</b></td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>14</b></td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>15</b></td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>16</b></td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>17+</b></td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td></tr>
+                    <tr><th colspan="11" class="section-header">SOFT</th></tr>
+                    <tr><td><b>A,2</b></td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>A,3</b></td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>A,4</b></td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>A,5</b></td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>A,6</b></td><td class="cell-h">H</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>A,7</b></td><td class="cell-s">S</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>A,8</b></td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td></tr>
+                    <tr><td><b>A,9</b></td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td></tr>
+                    <tr><th colspan="11" class="section-header">SPLITS</th></tr>
+                    <tr><td><b>2,2</b></td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>3,3</b></td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>4,4</b></td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>5,5</b></td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-d">D</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>6,6</b></td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>7,7</b></td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td><td class="cell-h">H</td></tr>
+                    <tr><td><b>8,8</b></td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td></tr>
+                    <tr><td><b>9,9</b></td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-s">S</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-s">S</td><td class="cell-s">S</td></tr>
+                    <tr><td><b>10,10</b></td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td><td class="cell-s">S</td></tr>
+                    <tr><td><b>A,A</b></td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td><td class="cell-sp">SP</td></tr>
                 </table>
             </div>
             <button id="btn-close-modal" onclick="toggleStrategyModal()">닫기</button>
@@ -467,13 +380,12 @@
                 <div class="info-box">합계: <span id="dealer-score">?</span></div>
             </div>
 
-            <div id="message">게임을 시작하려면 누르세요</div>
+            <div id="message">게임시작 버튼을 누르세요</div>
 
             <!-- 플레이어 영역 -->
             <div class="section">
                 <h3>PLAYER</h3>
-                <div id="player-cards" class="cards"></div>
-                <div class="info-box">합계: <span id="player-score">0</span></div>
+                <div id="player-hands-container" style="display: flex; gap: 10px; justify-content: center; width: 100%; overflow-x: auto;"></div>
             </div>
         </div>
 
@@ -489,18 +401,14 @@
 
 <script>
     let deck = [];
-    let playerHand = [];
     let dealerHand = [];
+    let hands = []; // 플레이어의 핸드 배열 (스플릿으로 여러 개 생길 수 있음)
+    let currentHandIndex = 0; // 현재 플레이 중인 핸드 인덱스
     let gameOver = false;
 
-    // 전략표 모달 토글 함수
     function toggleStrategyModal() {
         const modal = document.getElementById('strategy-modal');
-        if (modal.style.display === 'flex') {
-            modal.style.display = 'none';
-        } else {
-            modal.style.display = 'flex';
-        }
+        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
     }
 
     function createDeck() {
@@ -521,10 +429,16 @@
         return parseInt(val);
     }
 
+    function getSplitValue(val) {
+        // 10, J, Q, K는 모두 10으로 취급하여 스플릿 가능 판단
+        if (['10', 'J', 'Q', 'K'].includes(val)) return '10';
+        return val;
+    }
+
     function calculateScore(hand) {
         let score = 0;
         let aces = 0;
-        for (let card of hand) {
+        for (let card of hand.cards) {
             if (card.val === 'A') {
                 aces++;
                 score += 11;
@@ -540,15 +454,38 @@
     }
 
     function render(showDealerSecond = false) {
-        const playerContainer = document.getElementById('player-cards');
-        playerContainer.innerHTML = '';
-        playerHand.forEach((card, index) => {
-            const cardEl = createCardElement(card);
-            cardEl.style.zIndex = index;
-            playerContainer.appendChild(cardEl);
-        });
-        document.getElementById('player-score').innerText = calculateScore(playerHand);
+        // 플레이어 핸드 렌더링
+        const container = document.getElementById('player-hands-container');
+        container.innerHTML = '';
 
+        hands.forEach((hand, hIdx) => {
+            const handWrapper = document.createElement('div');
+            handWrapper.style.display = 'flex';
+            handWrapper.style.flexDirection = 'column';
+            handWrapper.style.alignItems = 'center';
+            handWrapper.style.position = 'relative';
+
+            const cardsEl = document.createElement('div');
+            cardsEl.className = 'cards';
+            hand.cards.forEach((card, cIdx) => {
+                const cardEl = createCardElement(card);
+                cardEl.style.zIndex = cIdx;
+                cardsEl.appendChild(cardEl);
+            });
+            handWrapper.appendChild(cardsEl);
+
+            const infoEl = document.createElement('div');
+            infoEl.className = 'info-box';
+            if (!gameOver && hIdx === currentHandIndex) {
+                infoEl.innerHTML = `<span class="active-hand-indicator">핸드 ${hIdx+1} (합계: ${calculateScore(hand)})</span>`;
+            } else {
+                infoEl.innerHTML = `핸드 ${hIdx+1} (합계: ${calculateScore(hand)}) ${hand.status ? '['+hand.status+']' : ''}`;
+            }
+            handWrapper.appendChild(infoEl);
+            container.appendChild(handWrapper);
+        });
+
+        // 딜러 핸드 렌더링
         const dealerContainer = document.getElementById('dealer-cards');
         dealerContainer.innerHTML = '';
         dealerHand.forEach((card, index) => {
@@ -564,7 +501,7 @@
         });
 
         if (showDealerSecond) {
-            document.getElementById('dealer-score').innerText = calculateScore(dealerHand);
+            document.getElementById('dealer-score').innerText = calculateScore({cards: dealerHand});
         } else {
             document.getElementById('dealer-score').innerText = getCardValue(dealerHand[0].val);
         }
@@ -577,105 +514,208 @@
             el.classList.add('red');
         }
         el.innerHTML = `
-            <div class="card-corner top">
-                <span>${card.val}</span>
-            </div>
+            <div class="card-corner top"><span>${card.val}</span></div>
             <span class="card-suit">${card.suit}</span>
-            <div class="card-corner bottom">
-                <span>${card.val}</span>
-            </div>
+            <div class="card-corner bottom"><span>${card.val}</span></div>
         `;
         return el;
     }
 
     function startGame() {
         createDeck();
-        playerHand = [deck.pop(), deck.pop()];
         dealerHand = [deck.pop(), deck.pop()];
+        
+        hands = [{
+            cards: [deck.pop(), deck.pop()],
+            isAce: false,
+            splitCount: 0,
+            status: null
+        }];
+        currentHandIndex = 0;
         gameOver = false;
         document.getElementById('message').innerText = '';
 
         render(false);
 
         document.getElementById('btn-deal').innerText = '다시시작';
-        document.getElementById('btn-hit').disabled = false;
-        document.getElementById('btn-stand').disabled = false;
-        document.getElementById('btn-double').disabled = playerHand.length !== 2;
-        document.getElementById('btn-split').disabled = playerHand[0].val !== playerHand[1].val;
+        updateControls();
 
-        if (calculateScore(playerHand) === 21) {
-            document.getElementById('message').innerText = '블랙잭! 플레이어 승리!';
+        if (calculateScore(hands[0]) === 21) {
+            document.getElementById('message').innerText = '블랙잭!';
             endGame();
         }
     }
 
+    function updateControls() {
+        if (gameOver) {
+            document.getElementById('btn-hit').disabled = true;
+            document.getElementById('btn-stand').disabled = true;
+            document.getElementById('btn-double').disabled = true;
+            document.getElementById('btn-split').disabled = true;
+            return;
+        }
+
+        const currentHand = hands[currentHandIndex];
+        const score = calculateScore(currentHand);
+
+        document.getElementById('btn-hit').disabled = score >= 21;
+        document.getElementById('btn-stand').disabled = false;
+
+        // 더블다운 조건: 카드가 2장일 때 (단, 에이스 스플릿 후 추가 카드 받은 핸드는 제외 등은 규칙에 따라 다름)
+        let canDouble = currentHand.cards.length === 2;
+        if (currentHand.isAce && currentHand.cards.length > 1) canDouble = false; // 에이스 스플릿 후 더블 불가
+        document.getElementById('btn-double').disabled = !canDouble;
+
+        // 스플릿 조건 확인
+        let canSplit = false;
+        if (currentHand.cards.length === 2) {
+            const v1 = getSplitValue(currentHand.cards[0].val);
+            const v2 = getSplitValue(currentHand.cards[1].val);
+            if (v1 === v2) {
+                if (currentHand.cards[0].val === 'A') {
+                    // Ace는 최대 1번 스플릿 가능
+                    canSplit = currentHand.splitCount === 0;
+                } else {
+                    // Ace 외에는 최대 3번 스플릿 가능 (총 핸드 4개 제한)
+                    canSplit = currentHand.splitCount < 3 && hands.length < 4;
+                }
+            }
+        }
+        document.getElementById('btn-split').disabled = !canSplit;
+    }
+
     function hit() {
         if (gameOver) return;
-        playerHand.push(deck.pop());
+        const currentHand = hands[currentHandIndex];
+        currentHand.cards.push(deck.pop());
         render(false);
-        
-        document.getElementById('btn-double').disabled = true;
-        document.getElementById('btn-split').disabled = true;
 
-        if (calculateScore(playerHand) > 21) {
-            document.getElementById('message').innerText = '버스트! 딜러 승리';
-            endGame();
+        // 에이스 스플릿 핸드인 경우 카드 1장 받으면 강제 스탠드
+        if (currentHand.isAce) {
+            currentHand.status = 'Stand';
+            nextHandOrDealer();
+            return;
+        }
+
+        if (calculateScore(currentHand) > 21) {
+            currentHand.status = 'Bust';
+            nextHandOrDealer();
+        } else {
+            updateControls();
         }
     }
 
     function stand() {
         if (gameOver) return;
-        dealerTurn();
+        hands[currentHandIndex].status = 'Stand';
+        nextHandOrDealer();
     }
 
     function doubleDown() {
         if (gameOver) return;
-        playerHand.push(deck.pop());
+        const currentHand = hands[currentHandIndex];
+        currentHand.cards.push(deck.pop());
+        currentHand.status = 'Double';
         render(false);
-        if (calculateScore(playerHand) > 21) {
-            document.getElementById('message').innerText = '더블다운 버스트! 딜러 승리';
-            endGame();
+
+        if (calculateScore(currentHand) > 21) {
+            currentHand.status = 'Bust';
+        }
+        nextHandOrDealer();
+    }
+
+    function splitCards() {
+        if (gameOver) return;
+        const currentHand = hands[currentHandIndex];
+        const card1 = currentHand.cards[0];
+        const card2 = currentHand.cards[1];
+        const isAceSplit = (card1.val === 'A');
+
+        // 기존 핸드를 첫 번째 스플릿 핸드로 변경
+        currentHand.cards = [card1, deck.pop()];
+        currentHand.isAce = isAceSplit;
+        currentHand.splitCount++;
+
+        // 새로운 스플릿 핸드 생성
+        const newHand = {
+            cards: [card2, deck.pop()],
+            isAce: isAceSplit,
+            splitCount: currentHand.splitCount,
+            status: null
+        };
+
+        // 현재 핸드 바로 뒤에 삽입
+        hands.splice(currentHandIndex + 1, 0, newHand);
+
+        // 만약 에이스 스플릿이라면 양쪽 다 각각 카드 1장씩 받은 상태이므로 바로 다음으로 진행 체크
+        if (isAceSplit) {
+            currentHand.status = 'Stand';
+            newHand.status = 'Stand';
+            render(false);
+            nextHandOrDealer();
+            return;
+        }
+
+        render(false);
+        updateControls();
+    }
+
+    function nextHandOrDealer() {
+        currentHandIndex++;
+        if (currentHandIndex < hands.length) {
+            // 아직 플레이할 핸드가 남음
+            render(false);
+            updateControls();
         } else {
+            // 모든 플레이어 핸드 종료 -> 딜러 턴 진행
             dealerTurn();
         }
     }
 
-    function splitCards() {
-        alert("MVP 버전의 스플릿 기능입니다.");
-    }
-
     function dealerTurn() {
+        gameOver = true;
         render(true);
-        let dealerScore = calculateScore(dealerHand);
+        let dealerScore = calculateScore({cards: dealerHand});
 
         let timer = setInterval(() => {
             if (dealerScore < 17) {
                 dealerHand.push(deck.pop());
                 render(true);
-                dealerScore = calculateScore(dealerHand);
+                dealerScore = calculateScore({cards: dealerHand});
             } else {
                 clearInterval(timer);
-                determineWinner();
+                determineWinners();
             }
         }, 800);
     }
 
-    function determineWinner() {
-        const playerScore = calculateScore(playerHand);
-        const dealerScore = calculateScore(dealerHand);
-        let msg = '';
+    function determineWinners() {
+        const dealerScore = calculateScore({cards: dealerHand});
+        let results = [];
 
-        if (dealerScore > 21) {
-            msg = '딜러 버스트! 플레이어 승리!';
-        } else if (playerScore > dealerScore) {
-            msg = '플레이어 승리!';
-        } else if (playerScore < dealerScore) {
-            msg = '딜러 승리!';
-        } else {
-            msg = '무승부 (Push)';
-        }
-        document.getElementById('message').innerText = msg;
-        endGame();
+        hands.forEach((hand, idx) => {
+            const pScore = calculateScore(hand);
+            let resMsg = `핸드 ${idx+1}: `;
+            
+            if (hand.status === 'Bust') {
+                resMsg += '버스트 (패배)';
+            } else if (dealerScore > 21) {
+                resMsg += '딜러 버스트 (승리!)';
+            } else if (pScore > dealerScore) {
+                resMsg += '승리!';
+            } else if (pScore < dealerScore) {
+                resMsg += '패배';
+            } else {
+                resMsg += '무승부 (Push)';
+            }
+            results.push(resMsg);
+        });
+
+        document.getElementById('messageinnerHTML') || (document.getElementById('message').innerText = results.join(' | '));
+        document.getElementById('btn-hit').disabled = true;
+        document.getElementById('btn-stand').disabled = true;
+        document.getElementById('btn-double').disabled = true;
+        document.getElementById('btn-split').disabled = true;
     }
 
     function endGame() {
