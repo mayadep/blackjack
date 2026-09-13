@@ -19,7 +19,7 @@
             align-items: center;
         }
 
-        /* [세로 모드 고정 및 화면 맞춤] */
+        /* [핵심] 세로 모드 컨테이너 및 하단 조작부 회피를 위한 여백 확보 */
         .portrait-container {
             width: 100vw;
             height: 100vh;
@@ -27,13 +27,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 20px 10px;
+            /* 아래쪽 홈 바 조작부 때문에 가려지지 않도록 하단 패딩을 넉넉히(약 버튼 높이만큼) 부여 */
+            padding: 15px 10px calc(25px + env(safe-area-inset-bottom)) 10px;
             box-sizing: border-box;
         }
 
         h1 {
-            font-size: 22px;
-            margin: 5px 0;
+            font-size: 21px;
+            margin: 2px 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             letter-spacing: 1px;
         }
@@ -43,9 +44,9 @@
             width: 100%;
             max-width: 450px;
             flex: 1;
-            max-height: 580px;
+            max-height: 540px;
             border-radius: 30px;
-            padding: 20px 10px;
+            padding: 15px 10px;
             box-shadow: inset 0 0 60px rgba(0,0,0,0.7);
             border: 10px solid #3e2723;
             display: flex;
@@ -53,7 +54,7 @@
             justify-content: space-around;
             align-items: center;
             box-sizing: border-box;
-            margin: 10px 0;
+            margin: 5px 0;
         }
 
         .section {
@@ -62,8 +63,8 @@
         }
 
         .section h3 {
-            margin: 0 0 5px 0;
-            font-size: 15px;
+            margin: 0 0 3px 0;
+            font-size: 14px;
             opacity: 0.9;
             letter-spacing: 2px;
         }
@@ -73,12 +74,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 130px;
+            min-height: 125px;
             position: relative;
             padding-left: 30px;
         }
 
-        /* [세로형에 최적화된 큼직한 카드 크기] */
+        /* 큼직한 카드 크기 */
         .card {
             background: white;
             color: black;
@@ -97,7 +98,6 @@
             flex-shrink: 0;
         }
 
-        /* 세로 화면에서도 히트 시 카드가 자연스럽게 겹쳐지도록 설정 */
         .card:not(:first-child) {
             margin-left: -50px;
         }
@@ -125,19 +125,20 @@
         .card-corner.bottom { align-self: flex-end; transform: rotate(180deg); }
         .card-suit { font-size: 32px; align-self: center; }
 
-        /* [하단 액션 버튼 세로형 배치] 한 손 조작이 편하게 2단 혹은 큼직하게 구성 */
+        /* 하단 액션 버튼 영역 */
         .controls {
             width: 100%;
             max-width: 450px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3개, 2개 배치로 한 눈에 들어오게 */
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
             box-sizing: border-box;
+            margin-bottom: 5px; /* 버튼 아래 추가 여백 */
         }
 
         .controls button {
             border: none;
-            padding: 14px 5px;
+            padding: 15px 5px;
             font-size: 16px;
             font-weight: 900;
             border-radius: 10px;
@@ -148,7 +149,6 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
-        /* 게임시작 버튼은 전체 너비를 쓰도록 설정 */
         #btn-deal {
             grid-column: span 3;
         }
@@ -174,15 +174,15 @@
         
         .info-box {
             font-size: 16px;
-            margin: 3px 0;
+            margin: 2px 0;
             font-weight: bold;
         }
 
         #message {
-            font-size: 19px;
+            font-size: 18px;
             color: #ffeb3b;
-            height: 25px;
-            margin: 5px 0;
+            height: 24px;
+            margin: 3px 0;
             font-weight: 900;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
@@ -211,7 +211,7 @@
             </div>
         </div>
 
-        <!-- 하단 액션 버튼 (세로 모드 그랜드 그리드 배치) -->
+        <!-- 하단 액션 버튼 -->
         <div class="controls">
             <button id="btn-deal" onclick="startGame()">게임시작</button>
             <button id="btn-hit" onclick="hit()" disabled>히트</button>
