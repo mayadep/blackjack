@@ -30,7 +30,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-evenly;
-            padding: 15px;
+            padding: 10px;
             box-sizing: border-box;
         }
 
@@ -43,7 +43,7 @@
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 22px;
             margin: 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             letter-spacing: 2px;
@@ -51,13 +51,13 @@
 
         .table {
             background-color: #1a5325;
-            width: 95vw;
-            max-width: 880px;
-            height: 65vh;
-            max-height: 440px;
+            width: 96vw;
+            max-width: 900px;
+            height: 66vh;
+            max-height: 450px;
             border-radius: 50% / 15%;
-            padding: 20px;
-            box-shadow: inset 0 0 80px rgba(0,0,0,0.7);
+            padding: 15px 25px;
+            box-shadow: inset 0 0 90px rgba(0,0,0,0.7);
             border: 12px solid #3e2723;
             display: flex;
             flex-direction: column;
@@ -70,44 +70,45 @@
         }
 
         .section h3 {
-            margin: 0 0 5px 0;
-            font-size: 15px;
+            margin: 0 0 3px 0;
+            font-size: 14px;
             opacity: 0.9;
             letter-spacing: 2px;
         }
 
-        /* [핵심] 카드가 겹쳐지도록 설정하는 영역 */
+        /* 겹쳐지는 카드 영역 공간 확보 */
         .cards {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 125px; /* 카드 크기에 맞춰 여유 확보 */
+            min-height: 140px; 
             position: relative;
-            padding-left: 30px; /* 카드가 겹쳐질 때 시작 위치 보정 */
+            padding-left: 40px; 
         }
 
-        /* [핵심] 카드 크기를 더 키우고, 겹쳐 쌓이기(Margin-left 음수 활용) 적용 */
+        /* [카드 크기 극대화] 훨씬 크고 시원시원한 카드 디자인 */
         .card {
             background: white;
             color: black;
-            width: 85px;  /* 기존보다 큼직하게 확대 */
-            height: 120px; /* 기존보다 큼직하게 확대 */
-            border-radius: 9px;
+            width: 95px;   /* 가로 폭 확대 */
+            height: 135px;  /* 세로 높이 확대 */
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 8px;
+            padding: 9px;
             font-weight: bold;
-            font-size: 26px; /* 글자 크기도 대폭 확대 */
-            box-shadow: 4px 4px 12px rgba(0,0,0,0.6);
+            font-size: 30px; /* 글자 크기 대폭 확대 */
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
             box-sizing: border-box;
             position: relative;
             transition: transform 0.3s ease;
+            flex-shrink: 0;
         }
 
-        /* 첫 번째 카드를 제외한 나머지 카드들은 왼쪽으로 바짝 당겨서 겹치게 만듦 */
+        /* 카드가 추가될 때 겹쳐지도록 음수 마진 적용 (너비의 약 60% 정도 겹침) */
         .card:not(:first-child) {
-            margin-left: -50px; /* 4/5 정도 겹치도록 음수 마진 적용 */
+            margin-left: -55px; 
         }
 
         .card.hidden {
@@ -131,22 +132,22 @@
         }
         .card-corner.top { align-self: flex-start; }
         .card-corner.bottom { align-self: flex-end; transform: rotate(180deg); }
-        .card-suit { font-size: 32px; align-self: center; }
+        .card-suit { font-size: 38px; align-self: center; }
 
         .controls {
             width: 100%;
-            max-width: 880px;
+            max-width: 900px;
             display: flex;
             justify-content: space-between;
             gap: 10px;
-            padding: 0 10px;
+            padding: 0 5px;
             box-sizing: border-box;
         }
 
         .controls button {
             flex: 1;
             border: none;
-            padding: 16px 5px;
+            padding: 15px 5px;
             font-size: 18px;
             font-weight: 900;
             border-radius: 10px;
@@ -178,14 +179,14 @@
         
         .info-box {
             font-size: 16px;
-            margin: 2px 0;
+            margin: 1px 0;
             font-weight: bold;
         }
 
         #message {
             font-size: 22px;
             color: #ffeb3b;
-            height: 30px;
+            height: 28px;
             margin: 2px 0;
             font-weight: 900;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
@@ -272,7 +273,6 @@
         playerContainer.innerHTML = '';
         playerHand.forEach((card, index) => {
             const cardEl = createCardElement(card);
-            // 겹쳐질 때 나중에 나온 카드가 위로 오도록 z-index 부여
             cardEl.style.zIndex = index;
             playerContainer.appendChild(cardEl);
         });
@@ -396,7 +396,7 @@
 
         if (dealerScore > 21) {
             msg = '딜러 버스트! 플레이어 승리!';
-        } else if (playerScore > playerScore) {
+        } else if (playerScore > dealerScore) {
             msg = '플레이어 승리!';
         } else if (playerScore < dealerScore) {
             msg = '딜러 승리!';
